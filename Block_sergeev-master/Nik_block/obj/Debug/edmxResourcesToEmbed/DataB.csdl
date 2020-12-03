@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="КудашкинModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="DannyDZ">
+    <Key>
+      <PropertyRef Name="IdContract" />
+    </Key>
+    <Property Name="IdContract" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NumberContract" Type="Int32" Nullable="false" />
+    <Property Name="IdSuppler" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Supplier" Relationship="Self.FK_данные_по_Д_З__Поставщики1" FromRole="DannyDZ" ToRole="Supplier" />
+    <NavigationProperty Name="DannyS" Relationship="Self.FK_данные_по_Сырью_в_Д__данные_по_Д_З_" FromRole="DannyDZ" ToRole="DannyS" />
+  </EntityType>
+  <EntityType Name="DannyS">
+    <Key>
+      <PropertyRef Name="IdContract" />
+    </Key>
+    <Property Name="IdContract" Type="Int32" Nullable="false" />
+    <Property Name="IdGoods" Type="Int32" Nullable="false" />
+    <Property Name="Price" Type="Double" Nullable="false" />
+    <Property Name="Count" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="DannyDZ" Relationship="Self.FK_данные_по_Сырью_в_Д__данные_по_Д_З_" FromRole="DannyS" ToRole="DannyDZ" />
+    <NavigationProperty Name="IdProdukts" Relationship="Self.FK_данные_по_Сырью_в_Д__Сырье1" FromRole="DannyS" ToRole="IdProdukts" />
+  </EntityType>
+  <EntityType Name="IdProdukts">
+    <Key>
+      <PropertyRef Name="IdGoods" />
+    </Key>
+    <Property Name="IdGoods" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Article" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Remove" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="DannyS" Relationship="Self.FK_данные_по_Сырью_в_Д__Сырье1" FromRole="IdProdukts" ToRole="DannyS" />
+  </EntityType>
+  <EntityType Name="Supplier">
+    <Key>
+      <PropertyRef Name="IdSuppler" />
+    </Key>
+    <Property Name="IdSuppler" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="INN" Type="Int32" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Street" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="DomAndKV" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="DannyDZ" Relationship="Self.FK_данные_по_Д_З__Поставщики1" FromRole="Supplier" ToRole="DannyDZ" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_данные_по_Д_З__Поставщики1">
+    <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+    <End Role="DannyDZ" Type="Self.DannyDZ" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Supplier">
+        <PropertyRef Name="IdSuppler" />
+      </Principal>
+      <Dependent Role="DannyDZ">
+        <PropertyRef Name="IdSuppler" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_данные_по_Сырью_в_Д__данные_по_Д_З_">
+    <End Role="DannyDZ" Type="Self.DannyDZ" Multiplicity="1" />
+    <End Role="DannyS" Type="Self.DannyS" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="DannyDZ">
+        <PropertyRef Name="IdContract" />
+      </Principal>
+      <Dependent Role="DannyS">
+        <PropertyRef Name="IdContract" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_данные_по_Сырью_в_Д__Сырье1">
+    <End Role="IdProdukts" Type="Self.IdProdukts" Multiplicity="1" />
+    <End Role="DannyS" Type="Self.DannyS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="IdProdukts">
+        <PropertyRef Name="IdGoods" />
+      </Principal>
+      <Dependent Role="DannyS">
+        <PropertyRef Name="IdGoods" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="КудашкинEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="DannyDZ" EntityType="Self.DannyDZ" />
+    <EntitySet Name="DannyS" EntityType="Self.DannyS" />
+    <EntitySet Name="IdProdukts" EntityType="Self.IdProdukts" />
+    <EntitySet Name="Supplier" EntityType="Self.Supplier" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <AssociationSet Name="FK_данные_по_Д_З__Поставщики1" Association="Self.FK_данные_по_Д_З__Поставщики1">
+      <End Role="Supplier" EntitySet="Supplier" />
+      <End Role="DannyDZ" EntitySet="DannyDZ" />
+    </AssociationSet>
+    <AssociationSet Name="FK_данные_по_Сырью_в_Д__данные_по_Д_З_" Association="Self.FK_данные_по_Сырью_в_Д__данные_по_Д_З_">
+      <End Role="DannyDZ" EntitySet="DannyDZ" />
+      <End Role="DannyS" EntitySet="DannyS" />
+    </AssociationSet>
+    <AssociationSet Name="FK_данные_по_Сырью_в_Д__Сырье1" Association="Self.FK_данные_по_Сырью_в_Д__Сырье1">
+      <End Role="IdProdukts" EntitySet="IdProdukts" />
+      <End Role="DannyS" EntitySet="DannyS" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
